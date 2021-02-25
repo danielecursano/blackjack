@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BLACKJACCKINO</title>
+</head>
+<body>
+	<div class="container" style="position: relative; margin: 0 auto; margin-top: 15%; margin-left: 0 auto; margin-right: 0 auto; width: 50%;">
+	<form action="/play/{{ id }}" method="POST">
+		<input type="number" hidden value="{{ step }}" name='step'>
+		{% if step != 1 %}
+		<!--<input type="text" id="move" name="move" placeholder="pass or card" autocomplete="off">-->
+		<input type="submit" name="move" value="pass">
+		<input type="submit" name="move" value="card">
+		{% else %}
+		{% if not player %}
+		<input type='text' name='addr' placeholder='Address' required>
+		{% endif %}
+		<input type="submit" value="PLAY">
+		{% endif %}
+	</form>
+	{% if error %}
+	<h1 style="color: red;">{{ error }}</h1>
+	{% endif %}
+	{% if res %}
+	<h1>{{ res }}</h1>
+	{% endif %}
+	{% if player %}
+	<table>
+		<tr>
+			<th>Dealer</th>
+			<th>You</th>
+		</tr>
+		<tr>
+			<td>{{ dealer }}</td>
+			<td>{{ player }}</td>
+		</tr>
+		<tr>
+			<td>{% if sumD %}{{sumD}}{% endif %}</td>
+			<td>{{ sumP }}</td>
+		</tr>
+		
+	</table>
+	{% endif %}
+</div>
+</body>
+</html>
