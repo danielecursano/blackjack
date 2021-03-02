@@ -22,6 +22,7 @@
 		{% else %}
 		{% if not player %}
 		<input type='text' name='addr' placeholder='Address' required id="addr_input">
+		<input type='text' id='txHash' required hidden name='txHash'>
 		{% endif %}
 		<input type="submit" value="PLAY" id="play_btn">
 		{% endif %}
@@ -51,6 +52,7 @@
 	{% endif %}
 </div>
 <script>
+	
     const ethereumButton = document.querySelector('.connect');
 	if (window.location.pathname == '/') {
 	document.getElementById('play_btn').disabled = true;
@@ -60,26 +62,29 @@
     
         ethereumButton.addEventListener('click', () => {
             if (jQuery('#main_btn').hasClass('sendEthButton')){
-        ethereum
-
-            .request({
+	if (ethereum.networkVersion != '3') {
+		alert('Connect to ropsten!');
+		return;
+	}
+        ethereum.request({
             method: 'eth_sendTransaction',
             params: [
                 {
                 from: accounts[0],
                 to: '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7',
-                value: '10000000000000',
+                value: '10000000000000',	
                 },
             ],
             })
-            .then((txHash) => enableButton(accounts[0]))
+            .then((txHash) => enableButton(txHash))
             .catch((error) => console.error, disableButton());
 			
         }
         });
 
-	function enableButton(addr) {
-		//document.getElementById("addr_input").value = addr;
+	function enableButton(hash) {
+		console.log(hash);
+		document.getElementById("txHash").value = hash;	
 		document.getElementById('play_btn').disabled = false;
 	}
 
@@ -93,10 +98,13 @@
         document.getElementById("main_btn").classList.add('sendEthButton');
         document.querySelector('#main_btn').innerText = 'Send money to join';
         getAccount();
+
+
     });
 
     async function getAccount() {
-    accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+    accounts = await ethereum.request({ method: 'eth_requestAccounts'});
+    
     }
 
 </script>

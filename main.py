@@ -5,14 +5,14 @@ from blackjack import BlackJack, Player
 from typing import Optional
 import random
 from web3 import Web3
-from pay_winner import pay
+from api_utils import pay, verify_transaction
 
 w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5'))
 app = FastAPI()
 templates = Jinja2Templates(directory='templates')
 games = {}
 
-#TODO check if address sent money on backend
+#TODO see api_utils 
 
 @app.get('/test', response_class=HTMLResponse)
 async def test(request: Request):
@@ -24,8 +24,7 @@ async def home(request: Request):
     return templates.TemplateResponse('index.html', {'request': request, 'step': 1, 'id': id})
 
 @app.post('/play/{id}', response_class=HTMLResponse)
-async def home2(request: Request, id: int, step: Optional[int] = Form(None), move: Optional[str] = Form(None), addr: Optional[str] = Form(None)):
-
+async def home2(request: Request, id: int, step: Optional[int] = Form(None), move: Optional[str] = Form(None), addr: Optional[str] = Form(None), txHash: Optional[str] = Form(None)):
     #once the game is finished the new link is play/0 which redirects to the first page
     if id == 0:
         return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
@@ -38,7 +37,8 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
     if step == 1:
         if not Web3.isAddress(addr):
             return templates.TemplateResponse('index.html', {'request': request, 'error': 'Address not valid!', 'step': 1, 'id': random.randint(9999, 9999999)})
-
+        if not verify_transaction(txHash, addr):
+            return templates.TemplateResponse('index.html', {'request': request, 'error': 'Transaction not valid!', 'step': 1, 'id': random.randint(9999, 9999999)})
         games[id] = BlackJack(addr)
         game = games[id]
         first_move = game.start_game()
