@@ -6,32 +6,42 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>BLACKJACCKINO</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  	<link rel="stylesheet" href="/static/css/main.css">
+
 </head>
 <body>
-	<div class="container" style="position: relative; margin: 0 auto; margin-top: 15%; margin-left: 0 auto; margin-right: 0 auto; width: 50%;">
-		{% if not player %}
-		<button class="connect" id="main_btn">Connect Wallet</button>
-		{% endif %}
-		
-	<form action="/play/{{ id }}" method="POST">
-		<input type="number" hidden value="{{ step }}" name='step'>
-		{% if step != 1 %}
-		<!--<input type="text" id="move" name="move" placeholder="pass or card" autocomplete="off">-->
-		<input type="submit" name="move" value="pass">
-		<input type="submit" name="move" value="card">
-		{% else %}
-		{% if not player %}
-		<input type='text' name='addr' placeholder='Address' required id="addr_input">
-		<input type='text' id='txHash' required hidden name='txHash'>
-		{% endif %}
-		<input type="submit" value="PLAY" id="play_btn">
-		{% endif %}
-	</form>
+
+	<div class="container">
+		<div class="input-group mb-3">	
+			 <form action="/play/{{ id }}" method="POST">
+				<input type="number" hidden value="{{ step }}" name='step'>
+				{% if step != 1 %}
+				<input type="submit" name="move" value="pass" class='btn btn-success'>
+				<input type="submit" name="move" value="card" class='btn btn-warning'>
+				{% else %}
+				{% if not player %}
+				<input type='text' name='addr' placeholder='Address' required id="addr_input">
+				<input type='text' id='txHash' required hidden name='txHash'>
+				{% endif %}
+				<div class="btn-group" role="group" aria-label="Basic example">
+				<input type="submit" value="PLAY" id="play_btn" class='btn btn-secondary'>
+				{% endif %}
+			</form>
+
+			{% if not player %}
+			<button type="button" class="btn btn-primary connect" id="main_btn">Connect</button>
+				</div>
+			{% endif %}
+		</div><br>
+
 	{% if error %}
 	<h1 style="color: red;">{{ error }}</h1>
 	{% endif %}
 	{% if res %}
+	<br>
 	<h1>{{ res }}</h1>
+	<br>
 	{% endif %}
 	{% if player %}
 	<table>
@@ -50,64 +60,10 @@
 		
 	</table>
 	{% endif %}
+
+
+	<script src="/static/js/pay2play.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </div>
-<script>
-	
-    const ethereumButton = document.querySelector('.connect');
-	if (window.location.pathname == '/') {
-	document.getElementById('play_btn').disabled = true;
-	}
-
-    let accounts = [];
-    
-        ethereumButton.addEventListener('click', () => {
-            if (jQuery('#main_btn').hasClass('sendEthButton')){
-	if (ethereum.networkVersion != '3') {
-		alert('Connect to ropsten!');
-		return;
-	}
-        ethereum.request({
-            method: 'eth_sendTransaction',
-            params: [
-                {
-                from: accounts[0],
-                to: '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7',
-                value: '10000000000000',	
-                },
-            ],
-            })
-            .then((txHash) => enableButton(txHash))
-            .catch((error) => console.error, disableButton());
-			
-        }
-        });
-
-	function enableButton(hash) {
-		console.log(hash);
-		document.getElementById("txHash").value = hash;	
-		document.getElementById('play_btn').disabled = false;
-	}
-
-	function disableButton() {
-		document.getElementById('play_btn').disabled = true;
-	}
-        
-
-    ethereumButton.addEventListener('click', () => {
-        document.getElementById("main_btn").classList.remove('connect');
-        document.getElementById("main_btn").classList.add('sendEthButton');
-        document.querySelector('#main_btn').innerText = 'Send money to join';
-        getAccount();
-
-
-    });
-
-    async function getAccount() {
-    accounts = await ethereum.request({ method: 'eth_requestAccounts'});
-    
-    }
-
-</script>
-
 </body>
 </html>

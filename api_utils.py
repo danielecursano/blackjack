@@ -1,7 +1,5 @@
 from web3 import Web3
 
-#TODO make more secure verify_transaction with value of transaction
-
 w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5'))
 dealer = '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7'
 with open('/home/daniele/Documenti/bc/test', 'r') as file:
@@ -25,10 +23,11 @@ def pay(addr, txHash):
     return False
 
 def verify_transaction(txHash, addr):
-    transaction = w3.eth.getTransactionReceipt(txHash)
+    transaction = w3.eth.get_transaction(txHash)
     try:
         if transaction['from'] == addr and transaction['to'] == dealer:
-            return True
+            if w3.fromWei(transaction['value'], 'ether') > 0.0039:
+                return True
         return False
     except:
         return False
