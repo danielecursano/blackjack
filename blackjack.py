@@ -18,8 +18,9 @@ class Player:
             return sum(self.cards)
 
 class BlackJack:
-    def __init__(self, address):
-        self.address = address
+    def __init__(self, addr, txHash):
+        self.address = addr
+        self.txHash = txHash
         self.dealer = Player()
         self.players = Player()
         self.cards = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10]

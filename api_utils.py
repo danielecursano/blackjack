@@ -9,21 +9,26 @@ with open('/home/daniele/Documenti/bc/test', 'r') as file:
 
 key = key.split('\n')[1]
 
-def pay(addr):
-    transaction = {
-        'to': addr,
-        'from': dealer,
-        'value': w3.toWei(0.01, 'ether'),
-        'gas': 200000,
-        'gasPrice': 234567821,
-        'nonce': w3.eth.get_transaction_count(dealer)
-}
-    signed = w3.eth.account.sign_transaction(transaction, key)
-    w3.eth.send_raw_transaction(signed.rawTransaction)
-    return True
+def pay(addr, txHash):
+    if verify_transaction(txHash, addr):
+        transaction = {
+            'to': addr,
+            'from': dealer,
+            'value': w3.toWei(0.09, 'ether'),
+            'gas': 200000,
+            'gasPrice': 234567821,
+            'nonce': w3.eth.get_transaction_count(dealer)
+        }
+        signed = w3.eth.account.sign_transaction(transaction, key)
+        w3.eth.send_raw_transaction(signed.rawTransaction)
+        return True
+    return False
 
 def verify_transaction(txHash, addr):
     transaction = w3.eth.getTransactionReceipt(txHash)
-    if transaction['from'] == addr and transaction['to'] == dealer:
-        return True
-    return False
+    try:
+        if transaction['from'] == addr and transaction['to'] == dealer:
+            return True
+        return False
+    except:
+        return False
