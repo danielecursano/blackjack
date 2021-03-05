@@ -2,12 +2,17 @@ from web3 import Web3
 
 w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5'))
 dealer = '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7'
+db = 'receiptDB'
 with open('/home/daniele/Documenti/bc/test', 'r') as file:
     key = file.read()
 
 key = key.split('\n')[1]
 
 def pay(addr, txHash):
+    """
+    if transaction is valid in case of win this function is used
+    to send the player the amount of ether he used doubled
+    """
     if verify_transaction(txHash, addr):
         transaction = {
             'to': addr,
@@ -23,7 +28,14 @@ def pay(addr, txHash):
     return False
 
 def verify_transaction(txHash, addr):
-    transaction = w3.eth.get_transaction(txHash)
+    """
+    The transaction made by the user is been verified getting sender and recipient
+    and the value of transaction
+    """
+    if read_hashes(txHash):
+        return False
+    transaction = w3.eth.get_transaction(txHash)    
+    append_hash(txHash)
     try:
         if transaction['from'] == addr and transaction['to'] == dealer:
             if w3.fromWei(transaction['value'], 'ether') > 0.0044:
@@ -31,3 +43,15 @@ def verify_transaction(txHash, addr):
         return False
     except:
         return False
+
+def append_hash(txHash):
+    with open(db, 'a') as file:
+        file.write(txHash+'\n')
+
+def read_hashes(txHash):
+    with open(db, 'r') as file:
+        data = file.read().split('\n')
+
+    if txHash in data:
+        return True
+    return False

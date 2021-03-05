@@ -13,7 +13,6 @@ w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a24
 app = FastAPI()
 templates = Jinja2Templates(directory='templates')
 app.mount('/static', StaticFiles(directory='static'), name='static')
-
 games = {}
 
 @app.get('/', response_class=HTMLResponse)
@@ -23,11 +22,11 @@ async def home(request: Request):
 
 @app.post('/play/{id}', response_class=HTMLResponse)
 async def home2(request: Request, id: int, step: Optional[int] = Form(None), move: Optional[str] = Form(None), addr: Optional[str] = Form(None), txHash: Optional[str] = Form(None)):
-    #once the game is finished the new link is play/0 which redirects to the first page
+    #redirect to homepage once the game is finished  
     if id == 0:
         return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+    #var error = None changes to string in case of error and returned in the html page
     error = None
-    #try-except to check if there is already a game linked to the id sent
     if step == 1:
         if not Web3.isAddress(addr):
             return templates.TemplateResponse('index.html', {'request': request, 'error': 'Address not valid!', 'step': 1, 'id': random.randint(9999, 9999999)})
@@ -50,7 +49,7 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
                 if pay(game.address, game.txHash):
                     print('{} got payed for the win'.format(game.address))
                 else:
-                    error = "You didn't send enough money"
+                    error = "Invalid Transaction"
 
             del games[id]
             return templates.TemplateResponse('index.html', {'request': request, 'error': error, 'dealer': dealer, 'player': player, 'step': 1, 'res': result, 'id': 0, 'sumP': game.players.value, 'sumD': game.dealer.value})
@@ -67,7 +66,7 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
                     if pay(game.address, game.txHash):
                         print('{} got payed for the win'.format(game.address))
                     else:
-                        error = "You didn't send enough money"
+                        error = "Invalid Transaction"
 
                 del games[id]
                 return templates.TemplateResponse('index.html', {'request': request, 'error': error, 'dealer': dealer, 'player': player, 'step': 1, 'res': result, 'id': 0, 'sumP': game.players.value, 'sumD': game.dealer.value})
@@ -76,7 +75,7 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
                     if pay(game.address, game.txHash):
                         print('{} got payed for the win'.format(game.address))
                     else:
-                        error = "You didn't send enough money"
+                        error = "Invalid Transaction"
                 return templates.TemplateResponse('index.html', {'request': request, 'error': error, 'dealer': [dealer[0], '*'], 'player': player, 'step': 2, 'id': id, 'sumP': game.players.value})
         else:
             return templates.TemplateResponse('index.html', {'request': request, 'dealer': [game.dealer.cards[0], '*'], 'player': game.players.cards, 'step': 2, 'id': id, 'error': 'Command not valid!', 'sumP': game.players.value})

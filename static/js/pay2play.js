@@ -32,6 +32,8 @@ function enableButton(hash) {
 	console.log(hash);
 	document.getElementById("txHash").value = hash;	
 	document.getElementById('play_btn').disabled = false;
+	document.getElementById('play_btn').classList.remove('btn-secondary');
+	document.getElementById('play_btn').classList.add('btn-success');
 }
 
 function disableButton() {

@@ -1,6 +1,12 @@
 import random
 
 class Player:
+    """
+    class used for player and dealer in blackjack
+
+    @prop value to get the sum of cards in self.cards list
+    as card A can be 1 or 11
+    """
     def __init__(self):
         self.cards = []
 
@@ -18,6 +24,11 @@ class Player:
             return sum(self.cards)
 
 class BlackJack:
+    """
+    Attributes: addr = address of the player used to give prize in case of win
+                txHash = receipt of transaction made by user to play a game
+                deck = 2 deck of 52 card
+    """
     def __init__(self, addr, txHash):
         self.address = addr
         self.txHash = txHash
@@ -27,6 +38,10 @@ class BlackJack:
         self.deck = {10: 32, 'A': 8, 9: 8, 8: 8, 7: 8, 6: 6, 5: 8, 4: 8, 3: 8, 2: 8} 
 
     def extract(self):
+        """ 
+        function to extract card from the deck and check if possible
+        method useless as once the game is finished the deck is restored
+        """
         card_ext = random.choice(self.cards)
         while self.deck[card_ext] == 0:
             card_ext = random.choice(self.cards)
@@ -35,6 +50,11 @@ class BlackJack:
         return card_ext
 
     def start_game(self):
+        """
+        player and dealer are given 2 cards each 
+        then the game can start asking the player
+        if he wants a card or pass
+        """
         self.players.cards = []
         self.dealer.cards = []
         for _ in range(2):
