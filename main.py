@@ -28,19 +28,22 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
         return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
     error = None
     #try-except to check if there is already a game linked to the id sent
-    try:
-        game = games[id]
-    except:
-        pass
     if step == 1:
         if not Web3.isAddress(addr):
             return templates.TemplateResponse('index.html', {'request': request, 'error': 'Address not valid!', 'step': 1, 'id': random.randint(9999, 9999999)})
-
-        games[id] = BlackJack(addr=addr, txHash=txHash)
-        game = games[id]
-        first_move = game.start_game()
+        if id in games:
+            game = games[id]
+            first_move = game.dealer.cards, game.players.cards
+        else:
+            games[id] = BlackJack(addr=addr, txHash=txHash)
+            game = games[id]
+            first_move = game.start_game()
         return templates.TemplateResponse('index.html', {'request': request, 'dealer': [first_move[0][0], '*'], 'player': first_move[1], 'step': 2, 'id': id, 'sumP': game.players.value})
     else:
+        try:
+            game = games[id]
+        except:
+            return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
         if move == 'pass':
             result, dealer, player = game.verify(finish=1)
             if result == 'WIN':

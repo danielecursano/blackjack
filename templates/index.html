@@ -13,7 +13,6 @@
 <body>
 
 	<div class="container">
-		<div class="input-group mb-3">	
 			 <form action="/play/{{ id }}" method="POST">
 				<input type="number" hidden value="{{ step }}" name='step'>
 				{% if step != 1 %}
@@ -32,9 +31,12 @@
 			{% if not player %}
 			<button type="button" class="btn btn-primary connect" id="main_btn">Connect</button>
 				</div>
+			{% else %}
+			</div>
 			{% endif %}
-		</div><br>
+	</div>
 
+	<div class="container2">
 	{% if error %}
 	<h1 style="color: red;">{{ error }}</h1>
 	{% endif %}
@@ -60,10 +62,10 @@
 		
 	</table>
 	{% endif %}
+</div>
 
 
 	<script src="/static/js/pay2play.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-</div>
 </body>
 </html>

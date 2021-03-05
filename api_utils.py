@@ -26,7 +26,7 @@ def verify_transaction(txHash, addr):
     transaction = w3.eth.get_transaction(txHash)
     try:
         if transaction['from'] == addr and transaction['to'] == dealer:
-            if w3.fromWei(transaction['value'], 'ether') > 0.0039:
+            if w3.fromWei(transaction['value'], 'ether') > 0.0044:
                 return True
         return False
     except:
