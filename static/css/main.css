@@ -9,3 +9,11 @@
 	margin-top: 5%;
 	width: 50%;
 }
+
+.titlePage {
+	margin: 0 auto;
+	margin-top: 3%;
+	width: 50%;
+	font-size: small;
+	font-weight: thin;
+}
