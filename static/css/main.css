@@ -17,3 +17,13 @@
 	font-size: small;
 	font-weight: thin;
 }
+
+body{
+	background-color: #FFF8E7;
+}
+
+input[type="text"], textarea {
+
+  background-color : #FFF8E7;
+
+}
