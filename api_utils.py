@@ -4,15 +4,10 @@ import os
 w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5'))
 dealer = '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7'
 db = 'receiptDB'
-contractAddress = '0xeBEee8BBF68887666059a4F86B1Fed12c8BB58b2'
-with open('/home/daniele/Documenti/bc/test', 'r') as file:
-    key = file.read()
 
-key = key.split('\n')[1]
-try:
-    key = os.environ['PRIVATE_KEY']
-except:
-    pass
+contractAddress = '0xeBEee8BBF68887666059a4F86B1Fed12c8BB58b2'
+key = os.environ['PRIVATE_KEY']
+
 
 def pay(addr, txHash):
     """
