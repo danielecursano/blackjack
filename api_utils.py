@@ -4,6 +4,7 @@ import os
 w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5'))
 dealer = '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7'
 db = 'receiptDB'
+contractAddress = '0xeBEee8BBF68887666059a4F86B1Fed12c8BB58b2'
 with open('/home/daniele/Documenti/bc/test', 'r') as file:
     key = file.read()
 
@@ -22,7 +23,7 @@ def pay(addr, txHash):
         transaction = {
             'to': addr,
             'from': dealer,
-            'value': w3.toWei(0.09, 'ether'),
+            'value': w3.toWei(0.009, 'ether'),
             'gas': 200000,
             'gasPrice': 234567821,
             'nonce': w3.eth.get_transaction_count(dealer)
@@ -42,9 +43,8 @@ def verify_transaction(txHash, addr):
     transaction = w3.eth.get_transaction(txHash)    
     append_hash(txHash)
     try:
-        if transaction['from'] == addr and transaction['to'] == dealer:
-            if w3.fromWei(transaction['value'], 'ether') > 0.0044:
-                return True
+        if transaction['to'] == contractAddress and transaction['value'] == 4500000000000000:
+            return True
         return False
     except:
         return False
