@@ -17,4 +17,6 @@ Project is created with:
 * Python version: 3.8.5
 * FastAPI version: 0.60.1
 * web3py version: 5.17.0
+
+
 To see other modules: see requirements.txt in root folder and brownieDevelopment
