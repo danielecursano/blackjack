@@ -13,6 +13,7 @@ On backend and frontend to connect to Ropsten Network web3 (js/py) is used and r
 App tested only on Ropsten test Network creating a project on infura.io
 
 !NEW App tested on cheapETH
+
 Contract written in solidity using Brownie.
 
 ## Technologies
