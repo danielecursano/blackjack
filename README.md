@@ -11,7 +11,7 @@ Blackjack is a web app written in python with FastAPI as web framework to play b
 On backend and frontend to connect to Ropsten Network web3 (js/py) is used and request as 'eth_sendtransaction' are made with Metamask.
 
 App tested only on Ropsten test Network creating a project on infura.io
-
+!NEW App tested on cheapETH
 Contract written in solidity using Brownie.
 
 ## Technologies
