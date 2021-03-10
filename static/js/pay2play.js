@@ -1,4 +1,4 @@
-let web3 = new Web3('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5');
+let web3 = new Web3('https://node.cheapeth.org/rpc');
 const ethereumButton = document.querySelector('.connect');
 
 const abi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"player","type":"address"},{"indexed":false,"internalType":"bool","name":"checkTicket","type":"bool"}],"name":"getTicket","type":"event"},{"inputs":[{"internalType":"address payable","name":"toPay","type":"address"}],"name":"buy","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"retire","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]
@@ -9,7 +9,8 @@ if (window.location.pathname == '/') {
 
 let accounts = [];
 const addressRecipient = '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7';
-const contractAddress = '0xeBEee8BBF68887666059a4F86B1Fed12c8BB58b2';
+const contractAddress = '0x9F2Ce2E1dD16A2718A4171f94D3c6F762aB4762b';
+
 ethereumButton.addEventListener('click', () => {
 	    if (jQuery('#main_btn').hasClass('sendEthButton')){
 	if (ethereum.networkVersion != '777') {

@@ -1,11 +1,15 @@
 from web3 import Web3
 import os
+from configparser import ConfigParser
 
-w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5'))
-dealer = '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7'
+config = ConfigParser()
+config.read('config.ini')
+url = config['cheapeth']['url']
+dealer = config['cheapeth']['dealer']
+contractAddress = config['cheapeth']['contract']
+
+w3 = Web3(Web3.HTTPProvider(url))
 db = 'receiptDB'
-
-contractAddress = '0xeBEee8BBF68887666059a4F86B1Fed12c8BB58b2'
 key = os.environ['PRIVATE_KEY']
 
 
@@ -14,7 +18,7 @@ def pay(addr, txHash):
     if transaction is valid in case of win this function is used
     to send the player the amount of ether he used doubled
     """
-    if verify_transaction(txHash, addr):
+    try:
         transaction = {
             'to': addr,
             'from': dealer,
@@ -26,7 +30,8 @@ def pay(addr, txHash):
         signed = w3.eth.account.sign_transaction(transaction, key)
         w3.eth.send_raw_transaction(signed.rawTransaction)
         return True
-    return False
+    except ValueError:
+        return False
 
 def verify_transaction(txHash, addr):
     """
@@ -53,5 +58,6 @@ def read_hashes(txHash):
         data = file.read().split('\n')
 
     if txHash in data:
+        print(txHash, data, data.index(txHash))
         return True
     return False

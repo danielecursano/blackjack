@@ -7,8 +7,12 @@ from typing import Optional
 import random
 from web3 import Web3
 from api_utils import pay, verify_transaction
+from configparser import ConfigParser
 
-w3 = Web3(Web3.HTTPProvider('https://ropsten.infura.io/v3/4ef94712ce884095ad5a2404003f36e5'))
+config = ConfigParser()
+config.read('config.ini')
+url = config['cheapeth']['url']
+w3 = Web3(Web3.HTTPProvider(url))
 
 app = FastAPI()
 templates = Jinja2Templates(directory='templates')
@@ -37,7 +41,9 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
             games[id] = BlackJack(addr=addr, txHash=txHash)
             game = games[id]
             first_move = game.start_game()
-        return templates.TemplateResponse('index.html', {'request': request, 'dealer': [first_move[0][0], '*'], 'player': first_move[1], 'step': 2, 'id': id, 'sumP': game.players.value})
+        if verify_transaction(game.txHash, game.address):
+            return templates.TemplateResponse('index.html', {'request': request, 'dealer': [first_move[0][0], '*'], 'player': first_move[1], 'step': 2, 'id': id, 'sumP': game.players.value})
+        return templates.TemplateResponse('index.html', {'request': request, 'error': 'invalid transaction', 'step': 1, 'id': random.randint(9999, 999999999)})
     else:
         try:
             game = games[id]
