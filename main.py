@@ -43,6 +43,8 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
             first_move = game.start_game()
         if verify_transaction(game.txHash, game.address):
             return templates.TemplateResponse('index.html', {'request': request, 'dealer': [first_move[0][0], '*'], 'player': first_move[1], 'step': 2, 'id': id, 'sumP': game.players.value})
+
+        del game[id]
         return templates.TemplateResponse('index.html', {'request': request, 'error': 'invalid transaction', 'step': 1, 'id': random.randint(9999, 999999999)})
     else:
         try:
