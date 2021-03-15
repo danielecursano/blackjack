@@ -75,13 +75,14 @@ class BlackJack:
                 self.dealer.cards.append(self.extract())
             if self.dealer.value > 21: 
                 if status_player:
-                    return 'WIN', self.dealer.cards, self.players.cards
+                    result = 'WIN'
             if self.players.value > self.dealer.value:
-                return 'WIN', self.dealer.cards, self.players.cards
+                result = 'WIN'
             if self.players.value == self.dealer.value:
-                return 'DRAW', self.dealer.cards, self.players.cards
+                result = 'DRAW'
             if self.players.value < self.dealer.value:
-                return 'LOSE', self.dealer.cards, self.players.cards
+                result = 'LOSE'
+            return result, self.dealer.cards, self.players.cards
 
         
 

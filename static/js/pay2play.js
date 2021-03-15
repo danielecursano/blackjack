@@ -14,7 +14,7 @@ const contractAddress = '0x9F2Ce2E1dD16A2718A4171f94D3c6F762aB4762b';
 ethereumButton.addEventListener('click', () => {
 	    if (jQuery('#main_btn').hasClass('sendEthButton')){
 	if (ethereum.networkVersion != '777') {
-		alert('Connect to ropsten!');
+		alert('Connect to cheapETH!');
 		return;
 	}
 		getTicket();
