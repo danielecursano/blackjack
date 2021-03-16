@@ -76,6 +76,7 @@ class BlackJack:
             if self.dealer.value > 21: 
                 if status_player:
                     result = 'WIN'
+                    return result, self.dealer.cards, self.players.cards
             if self.players.value > self.dealer.value:
                 result = 'WIN'
             if self.players.value == self.dealer.value:

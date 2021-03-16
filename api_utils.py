@@ -31,6 +31,11 @@ def pay(addr, txHash):
         w3.eth.send_raw_transaction(signed.rawTransaction)
         return True
     except ValueError:
+        """
+        During tests transaction from dealer to player failed due to pending transactions 
+        in dealer list. (Test made with one account that was both dealer and player)
+        Irrelevant in production
+        """
         return False
 
 def verify_transaction(txHash, addr):
@@ -58,6 +63,5 @@ def read_hashes(txHash):
         data = file.read().split('\n')
 
     if txHash in data:
-        print(txHash, data, data.index(txHash))
         return True
     return False
