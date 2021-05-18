@@ -29,3 +29,7 @@ To see other modules: see requirements.txt in root folder and brownieDevelopment
 ## Screenshots
 ![Home](https://github.com/raffobaffobuffo/blackjack/blob/eda41a5cbd4bafc090d29f285e3bc04487ce6f5d/screenshots/home.png)
 ![Game](https://github.com/raffobaffobuffo/blackjack/blob/eda41a5cbd4bafc090d29f285e3bc04487ce6f5d/screenshots/game.png)
+
+## TO DO
+some really useful contract 
+new verification for the user depending on the new contract
