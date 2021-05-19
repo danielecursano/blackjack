@@ -1,7 +1,10 @@
-let web3 = new Web3('https://node.cheapeth.org/rpc');
+let web3 = new Web3('https://ropsten.infura.io/v3/PROJECT_ID');
 const ethereumButton = document.querySelector('.connect');
 
 const abi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"player","type":"address"},{"indexed":false,"internalType":"bool","name":"checkTicket","type":"bool"}],"name":"getTicket","type":"event"},{"inputs":[{"internalType":"address payable","name":"toPay","type":"address"}],"name":"buy","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"retire","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]
+
+
+const newabi = [    {      "inputs": [],      "stateMutability": "nonpayable",      "type": "constructor"    },    {      "inputs": [],      "name": "buy",      "outputs": [],      "stateMutability": "payable",      "type": "function"    },    {      "inputs": [        {          "internalType": "address",          "name": "",          "type": "address"        }      ],      "name": "db",      "outputs": [        {          "internalType": "bool",          "name": "",          "type": "bool"        }      ],      "stateMutability": "view",      "type": "function"    },    {      "inputs": [        {          "internalType": "address",          "name": "player",          "type": "address"        }      ],      "name": "retire",      "outputs": [        {          "internalType": "bool",          "name": "",          "type": "bool"        }      ],      "stateMutability": "nonpayable",      "type": "function"    }  ]
 
 if (window.location.pathname == '/') {
 	document.getElementById('play_btn').disabled = true;
@@ -9,11 +12,11 @@ if (window.location.pathname == '/') {
 
 let accounts = [];
 const addressRecipient = '0x997515C1CA7a0F2cCf670d215765B1bAf11FeCD7';
-const contractAddress = '0x9F2Ce2E1dD16A2718A4171f94D3c6F762aB4762b';
+const contractAddress = '0xad475604Cc188C08197355e3698b94bc7088e991';
 
 ethereumButton.addEventListener('click', () => {
 	    if (jQuery('#main_btn').hasClass('sendEthButton')){
-	if (ethereum.networkVersion != '777') {
+	if (ethereum.networkVersion != "3") {
 		alert('Connect to cheapETH!');
 		return;
 	}
@@ -22,8 +25,8 @@ ethereumButton.addEventListener('click', () => {
 });
 
 async function getTicket() {
-	let contract = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]});
-	const data = contract.methods.buy(addressRecipient).encodeABI();
+	let contract = new web3.eth.Contract(newabi, contractAddress, {from: accounts[0]});
+	const data = contract.methods.buy().encodeABI();
 	const txObject = {
 		data: data,
 		value: web3.utils.toHex(web3.utils.toWei('0.0045', 'ether')),

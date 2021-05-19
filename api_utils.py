@@ -1,23 +1,36 @@
 from web3 import Web3
-import os
 from configparser import ConfigParser
 
 config = ConfigParser()
 config.read('config.ini')
-url = config['cheapeth']['url']
-dealer = config['cheapeth']['dealer']
-contractAddress = config['cheapeth']['contract']
+net = 'ropsten'
+url = config[net]['url']
+dealer = config[net]['dealer']
+contractAddress = config[net]['contract']
+private_key = os.environ['PRIVATE_KEY']
+abi = [    {      "inputs": [],      "stateMutability": "nonpayable",      "type": "constructor"    },    {      "inputs": [],      "name": "buy",      "outputs": [],      "stateMutability": "payable",      "type": "function"    },    {      "inputs": [        {          "internalType": "address",          "name": "",          "type": "address"        }      ],      "name": "db",      "outputs": [        {          "internalType": "bool",          "name": "",          "type": "bool"        }      ],      "stateMutability": "view",      "type": "function"    },    {      "inputs": [        {          "internalType": "address",          "name": "player",          "type": "address"        }      ],      "name": "retire",      "outputs": [        {          "internalType": "bool",          "name": "",          "type": "bool"        }      ],      "stateMutability": "nonpayable",      "type": "function"    }  ]
 
 w3 = Web3(Web3.HTTPProvider(url))
-db = 'receiptDB'
-key = os.environ['PRIVATE_KEY']
 
 
-def pay(addr, txHash):
-    """
-    if transaction is valid in case of win this function is used
-    to send the player the amount of ether he used doubled
-    """
+contract = w3.eth.contract(address=contractAddress, abi=abi)
+
+def checkpass(addr):
+    result = contract.functions.retire(addr).call({'from': dealer})
+
+    # Once the function gets called to get boolean if true
+    # the player will play and will be sent a transaction to the contact in 
+    # order to retire the pass (setting bool to false)
+
+    if result:
+        unsigned_txn = contract.functions.retire(addr).buildTransaction({'nonce': w3.eth.get_transaction_count(dealer)})
+        signed_txn = w3.eth.account.sign_transaction(unsigned_txn, private_key=private_key)
+        w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+    return result
+
+def pay(addr):
+    # if transaction is valid in case of win this function is used
+    # to send the player the amount of ether he used doubled
     try:
         transaction = {
             'to': addr,
@@ -27,41 +40,12 @@ def pay(addr, txHash):
             'gasPrice': 234567821,
             'nonce': w3.eth.get_transaction_count(dealer)
         }
-        signed = w3.eth.account.sign_transaction(transaction, key)
+        signed = w3.eth.account.sign_transaction(transaction, private_key)
         w3.eth.send_raw_transaction(signed.rawTransaction)
         return True
     except ValueError:
-        """
-        During tests transaction from dealer to player failed due to pending transactions 
-        in dealer list. (Test made with one account that was both dealer and player)
-        Irrelevant in production
-        """
+        # Nonsense try-exception due to the fact this is a personal project
+        # As there was an error if the dealer had a pending transaction
+        # he couldn't send any rewards
         return False
 
-def verify_transaction(txHash, addr):
-    """
-    The transaction made by the user is been verified getting sender and recipient
-    and the value of transaction
-    """
-    if read_hashes(txHash):
-        return False
-    transaction = w3.eth.get_transaction(txHash)    
-    append_hash(txHash)
-    try:
-        if transaction['to'] == contractAddress and transaction['value'] == 4500000000000000:
-            return True
-        return False
-    except:
-        return False
-
-def append_hash(txHash):
-    with open(db, 'a') as file:
-        file.write(txHash+'\n')
-
-def read_hashes(txHash):
-    with open(db, 'r') as file:
-        data = file.read().split('\n')
-
-    if txHash in data:
-        return True
-    return False

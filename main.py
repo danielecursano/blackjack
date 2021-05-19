@@ -6,7 +6,7 @@ from blackjack import BlackJack, Player
 from typing import Optional
 import random
 from web3 import Web3
-from api_utils import pay, verify_transaction
+from api_utils import pay, checkpass
 from configparser import ConfigParser
 
 config = ConfigParser()
@@ -41,10 +41,11 @@ async def home2(request: Request, id: int, step: Optional[int] = Form(None), mov
             games[id] = BlackJack(addr=addr, txHash=txHash)
             game = games[id]
             first_move = game.start_game()
-        if verify_transaction(game.txHash, game.address):
+        #if verify_transaction(game.txHash, game.address):
+        if checkpass(game.address):
             return templates.TemplateResponse('index.html', {'request': request, 'dealer': [first_move[0][0], '*'], 'player': first_move[1], 'step': 2, 'id': id, 'sumP': game.players.value})
 
-        del game[id]
+        del games[id]
         return templates.TemplateResponse('index.html', {'request': request, 'error': 'invalid transaction', 'step': 1, 'id': random.randint(9999, 999999999)})
     else:
         try:
