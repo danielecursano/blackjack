@@ -1,5 +1,6 @@
 from web3 import Web3
 from configparser import ConfigParser
+import os
 
 config = ConfigParser()
 config.read('config.ini')
